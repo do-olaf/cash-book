@@ -2,6 +2,7 @@ package com.example.cash;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,14 +23,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //layout 리소스 가져오기
-        editdate = (EditText)findViewById(R.id.EditText01);
         btn_startDate = (Button)findViewById(R.id.startDate_popup);
 
         //버튼 리스너
         btn_startDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog(Date_Dialog_ID);//다이얼로그 호출
+                showDatePickerDialog();//다이얼로그 호출
             }
         });
 
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         nowMonth = nowDate.get(Calendar.MONTH);
         nowYear = nowDate.get(Calendar.YEAR);
 
-        //현재 날짜로 시작하는 editdate(editText 컴포넌트)
+        //시작 날짜 버튼 text
         startDay = nowDay;
         startMonth = nowMonth;
         startYear = nowYear;
@@ -55,33 +55,28 @@ public class MainActivity extends AppCompatActivity {
     //-------------------------------------------------
     //달력 선택
     //-------------------------------------------------
-    EditText editdate;
     Button btn_startDate;
-    final int Date_Dialog_ID = 0;
 
     int nowDay,nowMonth, nowYear; //현재 날짜
     Calendar nowDate;
     int startDay, startMonth, startYear; //선택 날짜
 
-    //showDialog()호출되면 적절한 Dialog인스턴스를 반환하는 메서드
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch(id){
-            case Date_Dialog_ID:
-                return new DatePickerDialog(this //
-                        , onDateSet //이벤트 리스너
-                        , nowYear, nowMonth, nowDay); //초기 날짜
-        }
-        return null;
+    private void showDatePickerDialog(){
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this
+                , onDateSetListener //이벤트 리스너
+                , nowYear, nowMonth, nowDay); //초기 날짜
+
+        datePickerDialog.setMessage("시작 날짜를 설정하세요");
+        datePickerDialog.show();
     }
 
-    //editText 컴포넌트 값 바꾸는 메서드
+    //시작날짜 버튼 text 바꾸는 메서드
     private void updateDateDisplay(int year, int month, int day){
-        editdate.setText(year+"-"+(month+1)+"-"+day);
+        btn_startDate.setText(year+"-"+(month+1)+"-"+day);
         //month
     }
 
-    private DatePickerDialog.OnDateSetListener onDateSet
+    private DatePickerDialog.OnDateSetListener onDateSetListener
             = new DatePickerDialog.OnDateSetListener(){
         @Override
         public void onDateSet(DatePicker view //onDateSet(): 콜백메서드
