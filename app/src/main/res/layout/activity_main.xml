@@ -50,4 +50,26 @@
             android:orientation="vertical" />
     </ScrollView>
 
+    <Button
+        android:id="@+id/startDate_popup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="37dp"
+        android:text="datePicker"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9"
+        tools:layout_editor_absoluteX="39dp" />
+
+    <EditText
+        android:id="@+id/EditText01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="17dp"
+        android:layout_marginLeft="17dp"
+        android:text="editText"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView4"
+        app:layout_constraintStart_toEndOf="@+id/startDate_popup"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
