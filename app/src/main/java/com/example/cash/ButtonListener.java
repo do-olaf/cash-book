@@ -1,28 +1,32 @@
 package com.example.cash;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ButtonListener extends AppCompatActivity {
+public class ButtonListener {
+    Context context;
     Button btn_startDate
             , btn_endDate
             , btn_search
             , btn_create
             , btn_delete;
 
-    ButtonListener() {
+    ButtonListener(Context context) {
+        this.context = context;
         setButtonListener();
     }
 
     public void setButtonListener() {
         //레이아웃 리소스 가져오기
-        btn_startDate = (Button)findViewById(R.id.btn_startDate);
-        btn_endDate = (Button)findViewById(R.id.btn_endDate);
-        btn_search = (Button)findViewById(R.id.btn_search);
+        btn_startDate = (Button)((Activity)context).findViewById(R.id.btn_startDate);
+        btn_endDate = (Button)((Activity)context).findViewById(R.id.btn_endDate);
+        btn_search = (Button)((Activity)context).findViewById(R.id.btn_search);
 
 
         //버튼 리스너 셋팅
@@ -42,11 +46,11 @@ public class ButtonListener extends AppCompatActivity {
     public void showDatePickerDialog(int version){
         DatePickerDialog datePickerDialog;
         if(version==1) {
-            datePickerDialog = new DatePickerDialog(this
+            datePickerDialog = new DatePickerDialog(context
                     , onDateSetListener_start //이벤트 리스너
                     , SetDate.startYear, SetDate.startMonth, SetDate.startDay); //초기 날짜
         }else{
-            datePickerDialog = new DatePickerDialog(this
+            datePickerDialog = new DatePickerDialog(context
                     , onDateSetListener_end //이벤트 리스너
                     , SetDate.endYear, SetDate.endMonth, SetDate.endDay); //초기 날짜
         }
@@ -85,8 +89,8 @@ public class ButtonListener extends AppCompatActivity {
     //날짜 선택 버튼 text 바꾸는 메서드
     public void updateDateBtnText(int year, int month, int day, int version){
         switch (version) {
-            case 1: btn_startDate.setText(year+"-"+(month+1)+"-"+day); break;   //시작 날짜 선택 버튼
-            case 2: btn_endDate.setText(year+"-"+(month+1)+"-"+day); break;    //끝 날짜 선택 버튼
+            case 1: btn_startDate.setText(year+"-"+(month+1)+"-"+String.format("%02d", day)); break;   //시작 날짜 선택 버튼
+            case 2: btn_endDate.setText(year+"-"+(month+1)+"-"+String.format("%02d", day)); break;    //끝 날짜 선택 버튼
         }
     }
 }
