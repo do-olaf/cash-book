@@ -1,17 +1,20 @@
 package com.example.cash;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Toast;
+
 import java.util.Calendar;
 import androidx.appcompat.app.AppCompatActivity;
 
 
 public class MainActivity extends AppCompatActivity {
     Button btn_startDate, btn_endDate;
-    Button btn_search;
+    Button btn_search, btn_create;
 
     int nowDay,nowMonth, nowYear; //현재 날짜
     Calendar nowDate, startDate;
@@ -30,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         btn_startDate = (Button)findViewById(R.id.btn_startDate);
         btn_endDate = (Button)findViewById(R.id.btn_endDate);
         btn_search = (Button)findViewById(R.id.btn_search);
-
+        btn_create = (Button)findViewById(R.id.btn_create);
 
         //버튼 리스너
         btn_startDate.setOnClickListener(new View.OnClickListener() {
@@ -40,11 +43,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         btn_endDate.setOnClickListener(new View.OnClickListener(){
+            @Override
             public void onClick(View v) {
                 showDatePickerDialog(2);//다이얼로그 호출
             }
             });
-
+        btn_create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                create_popup(v);
+            }
+        });
 
         //현재 날짜 가져오기
         nowDate = Calendar.getInstance();
@@ -52,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         nowMonth = nowDate.get(Calendar.MONTH);
         nowYear = nowDate.get(Calendar.YEAR);
 
-        //시작 날짜 버튼 text (14일 전으로 맞춤)
+        //시작 날짜 (14일 전으로 맞춤)
         startDate = nowDate;
         startDate.add(Calendar.DATE,-14);
         startDay = startDate.get(Calendar.DAY_OF_MONTH);
@@ -60,19 +69,21 @@ public class MainActivity extends AppCompatActivity {
         startYear =  startDate.get(Calendar.YEAR);
         updateDateDisplay(startYear, startMonth, startDay,1);
 
-        //끝 날짜 버튼 text
+        //끝 날짜 text
         endDay = nowDay;
         endMonth = nowMonth;
         endYear = nowYear;
         updateDateDisplay(endYear, endMonth, endDay,2);
     }
-    protected void create_popup(View v){
-        //create 버튼을 클릭하면 실행되는 동작
-    }
+
     protected void delete_popup(View v) {
         //delete 버튼을 클릭하면 실행되는 동작
     }
-
+    protected void create_popup(View v){
+        Toast.makeText(getApplicationContext(),"Create",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivity.this,PopupActivity.class);
+        startActivity(intent);
+    }
     //-------------------------------------------------
     //달력 선택
     //-------------------------------------------------

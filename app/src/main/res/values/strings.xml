@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">cash</string>
+    <string name="title_activity_create_popup">create_popup</string>
+    <string name="title_activity_popup">PopupActivity</string>
 </resources>
