@@ -43,6 +43,7 @@ public class ButtonListener {
         });
     }
 
+    //datePickerDialog 보여주는 메서드
     public void showDatePickerDialog(int version){
         DatePickerDialog datePickerDialog;
         if(version==1) {
@@ -58,7 +59,7 @@ public class ButtonListener {
         datePickerDialog.show();
     }
 
-    //시작 날짜 변경
+    //datePickerDialog로 날짜 선택하면 시작 날짜 변경
     public DatePickerDialog.OnDateSetListener onDateSetListener_start
             = new DatePickerDialog.OnDateSetListener(){
         @Override
@@ -72,7 +73,7 @@ public class ButtonListener {
         }
     };
 
-    //끝 날짜 변경
+    //datePickerDialog로 날짜 선택하면 끝 날짜 변경
     public DatePickerDialog.OnDateSetListener onDateSetListener_end
             = new DatePickerDialog.OnDateSetListener(){
         @Override
