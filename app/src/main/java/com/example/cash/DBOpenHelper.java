@@ -20,13 +20,12 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DBContract.table01._CREATE, null);
+        Log.d("DatabaseHelper", "onCreate 호출됨");
+        db.execSQL(DBContract.table01._CREATE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(newVersion > 1){
-            db.execSQL("drop table if exists " + DBContract.table01._TABLENAME);
-        }
+        onCreate(db);
     }
 }

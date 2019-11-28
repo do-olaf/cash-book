@@ -24,7 +24,7 @@ public final class DBContract {
         public static final String MEMO = "memo";
         public static final String _TABLENAME = "table01";
         public static final String _CREATE =
-                "create table if not exists " + _TABLENAME + "("
+                "create table if not exists " + _TABLENAME + " ("
                         + _ID + " integer primary key autoincrement, "
                         + CHECKINOUT + " text not null, "
                         + MONEY + " integer not null, "

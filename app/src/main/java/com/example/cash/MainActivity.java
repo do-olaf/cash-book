@@ -60,16 +60,16 @@ public class MainActivity extends AppCompatActivity {
 
         String dbStr = "임시로 넣어봤습니다";
         textView = (TextView)findViewById(R.id.textView_sampleDB);
-
-        while( false == cursor.moveToNext() ){
-            dbStr += cursor.getInt(0);
+        while( cursor.moveToNext() ){
+            textView.setText(dbStr);
+            dbStr += cursor.getInt(0) + "";
             dbStr += cursor.getString(1);
-            dbStr += cursor.getInt(2);
+            dbStr += cursor.getInt(2) + "";
             dbStr += cursor.getString(3);
             dbStr += cursor.getString(4);
             dbStr += cursor.getString(5);
-            textView.setText(dbStr);
         }
+        cursor.close();
     }
 
     protected void create_popup(View v){
