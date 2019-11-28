@@ -26,13 +26,14 @@ public final class DBContract {
         public static final String _CREATE =
                 "create table if not exists " + _TABLENAME + " ("
                         + _ID + " integer primary key autoincrement, "
+                        + DATE + " text not null, "
                         + CHECKINOUT + " text not null, "
-                        + MONEY + " integer not null, "
+                        + MONEY + " text not null, "
                         + PAYMENT + " text not null, "
                         + CATEGORY + " text not null, "
                         + MEMO + " text);";
         public static final String _INSERT =
-                "insert or replace into " + _TABLENAME + "("
+                "insert or replace into " + _TABLENAME + " ("
                         + DATE + ", " + CHECKINOUT + ", " + MONEY + ", "
                         + PAYMENT + ", " + CATEGORY + ", " + MEMO + ") VALUES ";
         public static final String _SELECT =
