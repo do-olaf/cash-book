@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -16,6 +18,9 @@ public class MainActivity extends AppCompatActivity {
     DBOpenHelper dbOpenHelper = null;
 
     TextView textView;
+
+    //하나의 onActivityResult()에서 여러 개의 startActivityForResult()를 구분하기 위한 상수
+    private int REQUEST_CODE = 1;
 
     /**
      * onCreate(): 액티비티가 생성될 때 호출되며 사용자 인터페이스 초기화에 사용됨.
@@ -26,9 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /**
-         * DB 셋팅
-         */
+        //DB 불러오기
         loadDB();
 
         /**
@@ -48,28 +51,60 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //createActivity 실행
                 Intent intent = new Intent(MainActivity.this, CreateActivity.class);
-                startActivity(intent);
+
+                //호출한 activity로부터 결과를 돌려받으려면 startActivityForResult()
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
     }//onCreate()
 
+    //DB 불러오는 메서드
     private void loadDB(){
         dbOpenHelper = new DBOpenHelper(this);
         sqLiteDatabase = dbOpenHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(DBContract.table01._SELECT, null);
 
-        String dbStr = "임시로 넣어봤습니다";
+        String dbStr = "";
         textView = (TextView)findViewById(R.id.textView_sampleDB);
+
+        //textView에 dbStr 셋팅
         while( cursor.moveToNext() ){
+            dbStr += cursor.getInt(0) + "/";
+            dbStr += cursor.getString(1) + "/";
+            dbStr += cursor.getInt(2) + "/";
+            dbStr += cursor.getString(3) + "/";
+            dbStr += cursor.getString(4) + "/";
+            dbStr += cursor.getString(5) + "\n";
             textView.setText(dbStr);
-            dbStr += cursor.getInt(0) + "";
-            dbStr += cursor.getString(1);
-            dbStr += cursor.getInt(2) + "";
-            dbStr += cursor.getString(3);
-            dbStr += cursor.getString(4);
-            dbStr += cursor.getString(5);
         }
         cursor.close();
+    }
+
+    //DB 데이터 추가하는 메서드
+    private void insertDB(String date, String checkinout, String money
+                        , String payment, String category, String memo){
+        dbOpenHelper = new DBOpenHelper(this);
+        sqLiteDatabase = dbOpenHelper.getWritableDatabase();
+
+        String sql_Insert = DBContract.table01._INSERT +
+                " (" +
+                "'" + date + "', " +
+                "'" + checkinout + "', " +
+                Integer.parseInt(money) + ", " +
+                "'" + payment + "', " +
+                "'" + category + "', " +
+                "'" + memo + "')";
+
+        sqLiteDatabase.execSQL(sql_Insert);
+//        String dbStr = "";
+//        textView = (TextView)findViewById(R.id.textView_sampleDB);
+//        dbStr += date;
+//        dbStr += checkinout;
+//        dbStr += Integer.parseInt(money) + "";
+//        dbStr += payment;
+//        dbStr += category;
+//        dbStr += memo;
+//        textView.setText(dbStr);
     }
 
     protected void create_popup(View v){
@@ -79,5 +114,21 @@ public class MainActivity extends AppCompatActivity {
         //delete 버튼을 클릭하면 실행되는 동작
     }
 
-
+    //createActivity에서 저장된 결과 돌려주는 메서드
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == REQUEST_CODE ){
+            if(resultCode == RESULT_OK){
+                insertDB(
+                        data.getStringExtra("date")
+                        , data.getStringExtra("checkinout")
+                        , data.getStringExtra("money")
+                        , data.getStringExtra("payment")
+                        , data.getStringExtra("category")
+                        , data.getStringExtra("memo")
+                );
+                loadDB();
+            }
+        }
+    }
 }
