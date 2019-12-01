@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="payment">
+        <item>현금</item>
+        <item>신용카드</item>
+        <item>체크카드</item>
+    </string-array>
+    <string-array name="category">
+        <item>식비</item>
+        <item>저축</item>
+        <item>여가생활</item>
+        <item>자기계발</item>
+        <item>기타</item>
+    </string-array>
+</resources>
