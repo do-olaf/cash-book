@@ -38,6 +38,7 @@
                 android:id="@+id/radioBtn_outcome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:text="지출" />
 
             <TextView
@@ -93,10 +94,10 @@
                 android:inputType="textMultiLine" />
 
             <Button
-                android:id="@+id/btn_modify"
+                android:id="@+id/btn_add"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="수정하기" />
+                android:text="생성하기" />
 
             <Button
                 android:id="@+id/btn_cancel"

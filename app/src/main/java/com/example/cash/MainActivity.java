@@ -1,5 +1,6 @@
 package com.example.cash;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
     SQLiteDatabase sqLiteDatabase = null;
     DBOpenHelper dbOpenHelper = null;
-
+    Button btn_startDate, btn_endDate;
     TextView textView;
 
     //하나의 onActivityResult()에서 여러 개의 startActivityForResult()를 구분하기 위한 상수
@@ -37,12 +38,14 @@ public class MainActivity extends AppCompatActivity {
         /**
          * 날짜, 버튼 셋팅
          */
-        new SetDate(); //날짜 데이터 셋팅
-        ButtonListener buttonListener = new ButtonListener(this); //버튼 리스너 정의
-
+        btn_startDate = (Button)(findViewById(R.id.btn_startDate));
+        btn_endDate = (Button)(findViewById(R.id.btn_endDate));
+        CalendarPiker calpik_st = new CalendarPiker(this, btn_startDate ,14);
+        CalendarPiker calpik_end = new CalendarPiker(this,btn_endDate,0);
         //시작 & 끝 선택 버튼 텍스트 셋팅
-        buttonListener.updateDateBtnText(SetDate.startYear, SetDate.startMonth, SetDate.startDay,1);
-        buttonListener.updateDateBtnText(SetDate.endYear, SetDate.endMonth, SetDate.endDay,2);
+        calpik_st.updateDateBtnText(calpik_st.setyear, calpik_st.setmonth, calpik_st.setday);
+        calpik_end.updateDateBtnText(calpik_end.setyear,calpik_end.setmonth,calpik_end.setday);
+
 
         //create 버튼 리스너 셋팅
         Button btn_create = (Button)findViewById(R.id.btn_create);
@@ -119,15 +122,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == REQUEST_CODE ){
             if(resultCode == RESULT_OK){
-                insertDB(
-                        data.getStringExtra("date")
-                        , data.getStringExtra("checkinout")
-                        , data.getStringExtra("money")
-                        , data.getStringExtra("payment")
-                        , data.getStringExtra("category")
-                        , data.getStringExtra("memo")
-                );
-                loadDB();
+                    insertDB(
+                            data.getStringExtra("date")
+                            , data.getStringExtra("checkinout")
+                            , data.getStringExtra("money")
+                            , data.getStringExtra("payment")
+                            , data.getStringExtra("category")
+                            , data.getStringExtra("memo")
+                    );
+                 loadDB();
+ //               }
             }
         }
     }
