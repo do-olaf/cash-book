@@ -59,6 +59,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
+
+        // delete 버튼 리스너 셋팅
+        Button btn_delete = (Button)findViewById(R.id.btn_delete);
+        btn_delete.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // 이거 어떤 방식으로 삭제할까요?
+            }
+        });
     }//onCreate()
 
     //DB 불러오는 메서드
@@ -74,10 +83,11 @@ public class MainActivity extends AppCompatActivity {
         while( cursor.moveToNext() ){
             dbStr += cursor.getInt(0) + "/";
             dbStr += cursor.getString(1) + "/";
-            dbStr += cursor.getInt(2) + "/";
+            dbStr += cursor.getInt(2) == 0 ? "수입" + "/" : "지출" + "/"; // 0 -> "수입", 1 -> "지출"
             dbStr += cursor.getString(3) + "/";
             dbStr += cursor.getString(4) + "/";
-            dbStr += cursor.getString(5) + "\n";
+            dbStr += cursor.getString(5) + "/";
+            dbStr += cursor.getString(6) + "\n";
             textView.setText(dbStr);
         }
         cursor.close();
@@ -99,22 +109,6 @@ public class MainActivity extends AppCompatActivity {
                 "'" + memo + "')";
 
         sqLiteDatabase.execSQL(sql_Insert);
-//        String dbStr = "";
-//        textView = (TextView)findViewById(R.id.textView_sampleDB);
-//        dbStr += date;
-//        dbStr += checkinout;
-//        dbStr += Integer.parseInt(money) + "";
-//        dbStr += payment;
-//        dbStr += category;
-//        dbStr += memo;
-//        textView.setText(dbStr);
-    }
-
-    protected void create_popup(View v){
-        //create 버튼을 클릭하면 실행되는 동작
-    }
-    protected void delete_popup(View v) {
-        //delete 버튼을 클릭하면 실행되는 동작
     }
 
     //createActivity에서 저장된 결과 돌려주는 메서드
@@ -130,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                             , data.getStringExtra("category")
                             , data.getStringExtra("memo")
                     );
-                 loadDB();
+                    loadDB();
  //               }
             }
         }

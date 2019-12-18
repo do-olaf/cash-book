@@ -63,7 +63,6 @@ public class CreateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(et_money.getText().length()==0 ) {   //et_money에 아무것도 안쓰여있을 경우
                     Toast.makeText(getApplicationContext(),"금액을 입력하세요.",Toast.LENGTH_SHORT).show();
-
                 }
                 else {
                     Intent intent = new Intent();
@@ -74,9 +73,13 @@ public class CreateActivity extends AppCompatActivity {
                     String DBdate = Arrays.toString(date_arr);
                     intent.putExtra("date", DBdate);
 
-                    int radioID = radioGroup.getCheckedRadioButtonId();
-                    RadioButton rbtn = (RadioButton) findViewById(radioID);
-                    intent.putExtra("checkinout", rbtn.getText().toString());
+                    int radioID = radioGroup.getCheckedRadioButtonId(); // 선택된 버튼의 id값 리턴
+                    String is_outcome = "0"; // 수입:0, 지출:1
+                    if( radioID == R.id.radioBtn_outcome ){
+                        is_outcome = "1";
+                    }
+                    intent.putExtra("checkinout", is_outcome);
+
                     intent.putExtra("money", et_money.getText().toString());
                     intent.putExtra("payment", spinnerPayment.getSelectedItem().toString());
                     intent.putExtra("category", spinnerCategory.getSelectedItem().toString());
@@ -97,7 +100,13 @@ public class CreateActivity extends AppCompatActivity {
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult(RESULT_CANCELED); //이 코드가 없어도 되는데, 있을때와 없을때 차이점을 모르겠네요.
+                setResult(RESULT_CANCELED);
+                //이 코드가 없어도 되는데, 있을때와 없을때 차이점을 모르겠네요.
+                // mj: mainActivity에서 RESULT_CANCELED를 받았을 때 실행할 동작을
+                // 따로 설정하지 않았기 때문에 사실 필요 없는 코드인데
+                // 일단 혹시 창을 닫을 때 mainActivity에서 따로 실행시킬 동작이
+                // 필요하게 될 수도 있으므로 넣어두는게 좋을 것 같습니다.
+
                 finish();
             }
         });

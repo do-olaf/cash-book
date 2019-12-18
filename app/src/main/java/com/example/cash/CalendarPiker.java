@@ -63,7 +63,10 @@ public class CalendarPiker {
     };
 
     public void updateDateBtnText(int year, int month, int day){
-        button.setText(year+"-"+(month+1)+"-"+String.format("%02d", day)); //날짜 선택 버튼
+        String yearStr = String.format("%04d", year);
+        String monthStr = String.format("%02d", month+1);
+        String dayStr = String.format("%02d", day);
+        button.setText( yearStr + monthStr + dayStr ); //날짜 선택 버튼
 
     }
 }
