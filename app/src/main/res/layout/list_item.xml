@@ -6,7 +6,7 @@
     <!-- listView 한줄에 여러 항목을 보여주기 위해 필요한 레이아웃 -->
 
     <TextView
-        android:id="@+id/money"
+        android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -14,44 +14,38 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/checkinout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:text="수입/지출" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/money"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:text="금액" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/payment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:text="지불" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:text="카테고리" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/memo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:text="메모" />
 
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="TextView" />
 </LinearLayout>

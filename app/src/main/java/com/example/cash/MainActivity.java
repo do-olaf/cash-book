@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     DBOpenHelper dbOpenHelper = null;
     Button btn_startDate, btn_endDate;
     TextView textView;
+    ListView listView;
+    MyCursorAdapter myAdapter;
 
     //하나의 onActivityResult()에서 여러 개의 startActivityForResult()를 구분하기 위한 상수
     private int REQUEST_CODE = 1;
@@ -31,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        listView = (ListView) findViewById(R.id.listView);
 
         //DB 불러오기
         loadDB();
@@ -75,22 +80,10 @@ public class MainActivity extends AppCompatActivity {
         dbOpenHelper = new DBOpenHelper(this);
         sqLiteDatabase = dbOpenHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(DBContract.table01._SELECT, null);
-
-        String dbStr = "";
-        textView = (TextView)findViewById(R.id.textView_sampleDB);
-
-        //textView에 dbStr 셋팅
-        while( cursor.moveToNext() ){
-            dbStr += cursor.getInt(0) + "/";
-            dbStr += cursor.getString(1) + "/";
-            dbStr += cursor.getInt(2) == 0 ? "수입" + "/" : "지출" + "/"; // 0 -> "수입", 1 -> "지출"
-            dbStr += cursor.getString(3) + "/";
-            dbStr += cursor.getString(4) + "/";
-            dbStr += cursor.getString(5) + "/";
-            dbStr += cursor.getString(6) + "\n";
-            textView.setText(dbStr);
-        }
-        cursor.close();
+        //MyCursorAdapter에 지정한 DB불러오기 양식을 lstView에 구현
+        myAdapter = new MyCursorAdapter(this,cursor);
+        listView.setAdapter(myAdapter);
+        //cursor.close();
     }
 
     //DB 데이터 추가하는 메서드
