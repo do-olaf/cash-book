@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // 이거 어떤 방식으로 삭제할까요?
+                // 체크박스 만들고 체크 후 delete누르면 삭제되는 걸로 해요!
             }
         });
     }//onCreate()
