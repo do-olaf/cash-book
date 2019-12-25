@@ -69,8 +69,9 @@ public class CreateActivity extends AppCompatActivity {
 
                     //HashMap처럼 key, value 설정
                     //이후 data.get~Extra("name") 으로 value값 불러올 수 있음
-                    String[] date_arr = btn_dataSelect.getText().toString().split("-");
-                    String DBdate = Arrays.toString(date_arr);
+//                    String[] date_arr = btn_dataSelect.getText().toString().split("-");
+//                    String DBdate = Arrays.toString(date_arr);
+                    String DBdate = (String) btn_dataSelect.getText();
                     intent.putExtra("date", DBdate);
 
                     int radioID = radioGroup.getCheckedRadioButtonId(); // 선택된 버튼의 id값 리턴

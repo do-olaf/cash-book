@@ -5,14 +5,18 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -70,8 +74,16 @@ public class MainActivity extends AppCompatActivity {
         btn_delete.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                // 이거 어떤 방식으로 삭제할까요?
-                // 체크박스 만들고 체크 후 delete누르면 삭제되는 걸로 해요!
+                for( int i = 0; i < listView.getCount(); i++ ){
+                    CheckBox checkBox = (CheckBox)(listView.getChildAt(i).findViewById(R.id.checkBox1));
+                    if( checkBox.isChecked() ){
+                        Log.d("delete row", i + ""); // 행 확인용
+                        TextView tv_Id = (TextView)(listView.getChildAt(i).findViewById(R.id._id));
+                        String _id = (String) tv_Id.getText();
+                        deleteDB(_id);
+                    }
+                }
+                loadDB();
             }
         });
     }//onCreate()
@@ -82,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         sqLiteDatabase = dbOpenHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(DBContract.table01._SELECT, null);
         //MyCursorAdapter에 지정한 DB불러오기 양식을 lstView에 구현
-        myAdapter = new MyCursorAdapter(this,cursor);
+        myAdapter = new MyCursorAdapter(this, cursor);
         listView.setAdapter(myAdapter);
         //cursor.close();
     }
@@ -103,6 +115,15 @@ public class MainActivity extends AppCompatActivity {
                 "'" + memo + "')";
 
         sqLiteDatabase.execSQL(sql_Insert);
+    }
+
+    // DB 데이터 삭제하는 메서드
+    private void deleteDB(String _id){
+        dbOpenHelper = new DBOpenHelper(this);
+        sqLiteDatabase = dbOpenHelper.getWritableDatabase();
+
+        String sql_delete = DBContract.table01._DELETE + _id;
+        sqLiteDatabase.execSQL(sql_delete);
     }
 
     //createActivity에서 저장된 결과 돌려주는 메서드

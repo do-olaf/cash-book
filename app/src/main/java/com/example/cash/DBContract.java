@@ -38,5 +38,7 @@ public final class DBContract {
                         + PAYMENT + ", " + CATEGORY + ", " + MEMO + ") VALUES ";
         public static final String _SELECT =
                 "select * from " + _TABLENAME;
+        public static final String _DELETE =
+                "delete from " + _TABLENAME + " where " + _ID + "=";
     }
 }
