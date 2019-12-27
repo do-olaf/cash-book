@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,6 +18,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
+
+import static com.example.cash.MyCursorAdapter.selectedItemsPositions;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -74,15 +77,7 @@ public class MainActivity extends AppCompatActivity {
         btn_delete.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                for( int i = 0; i < listView.getCount(); i++ ){
-                    CheckBox checkBox = (CheckBox)(listView.getChildAt(i).findViewById(R.id.checkBox1));
-                    if( checkBox.isChecked() ){
-                        Log.d("delete row", i + ""); // 행 확인용
-                        TextView tv_Id = (TextView)(listView.getChildAt(i).findViewById(R.id._id));
-                        String _id = (String) tv_Id.getText();
-                        deleteDB(_id);
-                    }
-                }
+                deleteDB();
                 loadDB();
             }
         });
@@ -118,12 +113,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // DB 데이터 삭제하는 메서드
-    private void deleteDB(String _id){
+    private void deleteDB(){
         dbOpenHelper = new DBOpenHelper(this);
         sqLiteDatabase = dbOpenHelper.getWritableDatabase();
 
-        String sql_delete = DBContract.table01._DELETE + _id;
-        sqLiteDatabase.execSQL(sql_delete);
+
+        for(int i =0 ;i<selectedItemsPositions.size();i++) {
+            int _id = selectedItemsPositions.get(i);
+            String sql_delete = DBContract.table01._DELETE +_id;
+            sqLiteDatabase.execSQL(sql_delete);
+        }
+
     }
 
     //createActivity에서 저장된 결과 돌려주는 메서드
