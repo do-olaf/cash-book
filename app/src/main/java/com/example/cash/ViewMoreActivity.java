@@ -1,10 +1,9 @@
 package com.example.cash;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,51 +13,87 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.Arrays;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class CreateActivity extends AppCompatActivity {
-    Button btn_add, btn_cancel;
+import static com.example.cash.DBContract.table01.CATEGORY;
+import static com.example.cash.DBContract.table01.CHECKINOUT;
+import static com.example.cash.DBContract.table01.DATE;
+import static com.example.cash.DBContract.table01.MEMO;
+import static com.example.cash.DBContract.table01.MONEY;
+import static com.example.cash.DBContract.table01.PAYMENT;
+import static com.example.cash.MyCursorAdapter.clickedItemPosition;
+
+public class ViewMoreActivity  extends AppCompatActivity {
+    SQLiteDatabase sqLiteDatabase = null;
+    DBOpenHelper dbOpenHelper = null;
+    MyCursorAdapter myAdapter;
+
+    Button btn_edit, btn_cancel;
     Button btn_dataSelect;
     RadioGroup radioGroup;
+    RadioButton radioBtn_income;
+    RadioButton radioBtn_outcome;
     EditText et_money;
     EditText et_memo;
+    Spinner spinnerPayment;
+    Spinner spinnerCategory;
+
+    //DB에서 불러와서 저장할 데이터들
+    String date;
+    String checkinout;
+    String money;
+    String payment;
+    String category;
+    String memo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create);
+        setContentView(R.layout.activity_viewmore);
 
         btn_dataSelect = (Button)findViewById(R.id.btn_dateSelect);
         radioGroup = (RadioGroup)findViewById(R.id.radioBtn);
+        radioBtn_income = (RadioButton)findViewById(R.id.radioBtn_income);
+        radioBtn_outcome = (RadioButton)findViewById(R.id.radioBtn_outcome);
+
         et_money = (EditText)findViewById(R.id.editText_money);
         et_memo = (EditText)findViewById(R.id.editText_memo);
         CalendarPiker calendarpiker_add = new CalendarPiker(this, btn_dataSelect ,0);
         calendarpiker_add.updateDateBtnText(calendarpiker_add.setyear, calendarpiker_add.setmonth, calendarpiker_add.setday);
 
+
+        /**
+        해당하는 transaction의 데이터 로딩
+         */
+        loadDB(); //해당하는 transaction의 데이터 불러오기
+
         /**
          * 스피터 셋팅
          */
-        //payment 스피너에 데이터 출력
+        //payment 스피너셋팅
         ArrayAdapter<CharSequence> adapterPayment = ArrayAdapter.createFromResource(this, R.array.payment, android.R.layout.simple_spinner_item);
         adapterPayment.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        final Spinner spinnerPayment = (Spinner)findViewById(R.id.spinner_payment);
-        spinnerPayment.setPrompt("결제 수단을 선택하세요");
+        spinnerPayment = (Spinner)findViewById(R.id.spinner_payment);
+        spinnerPayment.setPrompt(payment);
         spinnerPayment.setAdapter(adapterPayment);
 
-        //category 스피너에 데이터 출력
+        //category 스피너셋팅
         ArrayAdapter<CharSequence> adapterCategory = ArrayAdapter.createFromResource(this, R.array.category, android.R.layout.simple_spinner_item);
         adapterCategory.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        final Spinner spinnerCategory = (Spinner)findViewById(R.id.spinner_category);
-        spinnerCategory.setPrompt("카테고리를 선택하세요");
+        spinnerCategory = (Spinner)findViewById(R.id.spinner_category);
+        spinnerCategory.setPrompt(category);
         spinnerCategory.setAdapter(adapterCategory);
+
+        /**
+         해당하는 transaction의 데이터 출력
+         */
+        setData();
 
         /**
          * 버튼 리스너
          */
-        btn_add = (Button)findViewById(R.id.btn_add);
-        btn_add.setOnClickListener(new View.OnClickListener(){
+        btn_edit = (Button)findViewById(R.id.btn_edit);
+        btn_edit.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 if(et_money.getText().length()==0 ) {   //et_money에 아무것도 안쓰여있을 경우
@@ -114,4 +149,31 @@ public class CreateActivity extends AppCompatActivity {
 
     }
 
+    //해당 transaction의 정보를 DB에서 불러와서 저장
+    private void loadDB(){
+        dbOpenHelper = new DBOpenHelper(this);
+        sqLiteDatabase = dbOpenHelper.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DBContract.table01._SELECT, null);
+        cursor.moveToPosition(clickedItemPosition);
+        date = cursor.getString(cursor.getColumnIndex( DATE ));
+        checkinout = cursor.getString(cursor.getColumnIndex( CHECKINOUT ));
+        money = cursor.getString(cursor.getColumnIndex(MONEY));
+        payment = cursor.getString(cursor.getColumnIndex(PAYMENT));
+        category = cursor.getString(cursor.getColumnIndex(CATEGORY));
+        memo = cursor.getString(cursor.getColumnIndex(MEMO));
+        cursor.close();
+
+    }
+
+    //불러온 정보를 화면에 출력
+    private void setData(){
+        if(checkinout=="0"){ //수입: 0, 지출: 1
+            radioBtn_income.setChecked(true);
+        }else{ //현재 else만 실행되는 상황
+            radioBtn_outcome.setChecked(true);
+        }
+        btn_dataSelect.setText(date);
+        et_money.setText(money);
+        et_memo.setText(memo);
+    }
 }

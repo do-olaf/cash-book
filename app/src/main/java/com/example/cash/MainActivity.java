@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,10 +21,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 
+import static com.example.cash.MyCursorAdapter.clickedItemPosition;
 import static com.example.cash.MyCursorAdapter.selectedItemsPositions;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
     SQLiteDatabase sqLiteDatabase = null;
     DBOpenHelper dbOpenHelper = null;
     Button btn_startDate, btn_endDate;
@@ -117,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
         dbOpenHelper = new DBOpenHelper(this);
         sqLiteDatabase = dbOpenHelper.getWritableDatabase();
 
-
         for(int i =0 ;i<selectedItemsPositions.size();i++) {
             int _id = selectedItemsPositions.get(i);
             String sql_delete = DBContract.table01._DELETE +_id;
@@ -140,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
                             , data.getStringExtra("memo")
                     );
                     loadDB();
- //               }
             }
         }
     }
+
 }

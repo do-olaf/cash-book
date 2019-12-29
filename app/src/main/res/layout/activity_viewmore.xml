@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ViewMoreActivity">
+
+
+    <Button
+        android:id="@+id/btn_dateSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:text="날짜 선택" />
+
+        <TextView
+            android:id="@+id/textView_check"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="수입/지출" />
+
+    <RadioGroup
+        android:id="@+id/radioBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:visibility="visible">
+
+        <RadioButton
+            android:id="@+id/radioBtn_income"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:clickable="true"
+            android:enabled="true"
+            android:text="수입"
+            android:visibility="visible" />
+
+        <RadioButton
+            android:id="@+id/radioBtn_outcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:clickable="true"
+            android:enabled="true"
+            android:text="지출" />
+    </RadioGroup>
+        <TextView
+            android:id="@+id/textView_money"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="금액" />
+
+    <EditText
+        android:id="@+id/editText_money"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:ems="10"
+        android:inputType="number" />
+
+        <TextView
+            android:id="@+id/textView_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="결제수단" />
+
+    <Spinner
+        android:id="@+id/spinner_payment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:spinnerMode="dialog" />
+
+        <TextView
+            android:id="@+id/textView_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="카테고리" />
+
+    <Spinner
+        android:id="@+id/spinner_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:spinnerMode="dialog" />
+
+        <TextView
+            android:id="@+id/textView_memo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="메모" />
+
+    <EditText
+        android:id="@+id/editText_memo"
+        android:layout_width="match_parent"
+        android:layout_height="211dp"
+        android:background="#FFEB3B"
+        android:clickable="true"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine" />
+
+    <Button
+        android:id="@+id/btn_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="편집하기" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="닫기" />
+
+</LinearLayout>
