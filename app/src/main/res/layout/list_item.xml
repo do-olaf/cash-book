@@ -13,19 +13,11 @@
         android:layout_weight="1" />
 
     <TextView
-        android:id="@+id/_id"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="idx"
-        android:visibility="invisible" />
-
-    <TextView
         android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="금액"
+        android:text="날짜"
         android:textStyle="bold" />
 
     <TextView
@@ -56,11 +48,11 @@
         android:layout_weight="1"
         android:text="카테고리" />
 
-    <TextView
-        android:id="@+id/memo"
+    <Button
+        android:id="@+id/btn_viewmore1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="메모" />
+        android:text=":" />
 
 </LinearLayout>

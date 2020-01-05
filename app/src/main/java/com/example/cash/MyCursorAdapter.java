@@ -1,16 +1,19 @@
 package com.example.cash;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +28,10 @@ import static com.example.cash.DBContract.table01.PAYMENT;
 
 public class MyCursorAdapter extends CursorAdapter {
     // 체크박스가 체크된 item의 position값 저장할 List
-    static List<Integer> selectedItemsPositions;
+
+    static List<Integer> selectedItemsPositions;        //checkbox list
+    static int clickedItemPosition;             //btn_viewmore 클릭된 item의 position
+    CheckBox checkBox;
 
     @SuppressWarnings("deprecation")
     public MyCursorAdapter(Context context, Cursor c) {
@@ -44,40 +50,38 @@ public class MyCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         //list_item에 있는 컴포넌트들 객체로 받아오기
-        TextView tvId = (TextView) view.findViewById( R.id._id );
         TextView tvDate = (TextView) view.findViewById( R.id.date );
         TextView tvCheck = (TextView) view.findViewById( R.id.checkinout );
         TextView tvMoney = (TextView) view.findViewById( R.id.money );
         TextView tvPayment = (TextView) view.findViewById( R.id.payment );
         TextView tvCategory = (TextView) view.findViewById( R.id.category );
-        TextView tvMemo = (TextView) view.findViewById( R.id.memo );
 
         //DB에 있는 데이터를 cursor를 움직이며 받아오기
-        String id = cursor.getInt( cursor.getColumnIndex( _ID ) ) + ""; // idx값
         String date = cursor.getString( cursor.getColumnIndex( DATE ) );
         String checkinout = cursor.getString( cursor.getColumnIndex( CHECKINOUT ) );
         String money = cursor.getString( cursor.getColumnIndex( MONEY ) );
         String payment = cursor.getString( cursor.getColumnIndex( PAYMENT ) );
         String category = cursor.getString( cursor.getColumnIndex( CATEGORY ) );
-        String memo = cursor.getString( cursor.getColumnIndex( MEMO ) );
 //        Log.d("스트링 확인", date + ", " + checkinout); //: 아마 필요 없는 코드. 다시 확인해보고 지울게요
 
         //받아온 데이터 -> 컴포넌트에 텍스트 입력
-        tvId.setText( id );
         tvDate.setText( date );
         tvCheck.setText( checkinout );
         tvMoney.setText(money);
         tvPayment.setText(payment);
         tvCategory.setText(category);
-        tvMemo.setText(memo);
 
         // 체크박스 바인딩
         CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox1);
-        checkBox.setTag(cursor.getPosition()); // position값으로 tag 셋팅
+        checkBox.setTag(cursor.getInt(0)); // id 값으로 tag 셋팅
         if (selectedItemsPositions.contains(cursor.getPosition()))
             checkBox.setChecked(true);
         else
             checkBox.setChecked(false);
+
+
+        Button btn_viewmore = (Button) view.findViewById(R.id.btn_viewmore1);
+        btn_viewmore.setTag(cursor.getPosition());  // position값으로 tag셋팅
 
     }
 
@@ -89,13 +93,13 @@ public class MyCursorAdapter extends CursorAdapter {
      * @return
      */
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+    public View newView(final Context context, Cursor cursor, ViewGroup parent) {
         //list_item에 만든 레이아웃을 확장하여 activity_main에 있는 listView에 넣는 개념
         LayoutInflater inflater = LayoutInflater.from( context );
         View v = inflater.inflate( R.layout.list_item, parent, false );
 
         // 체크박스 리스너 셋팅
-        CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkBox1); // 체크박스
+        checkBox = (CheckBox) v.findViewById(R.id.checkBox1); // 체크박스
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override // 체크상태 변경 감지 리스너
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -115,6 +119,20 @@ public class MyCursorAdapter extends CursorAdapter {
                 }
             }
         });
+
+        /*View More 버튼 리스너 세팅*/
+
+        final Button btn_viewmore = (Button) v.findViewById(R.id.btn_viewmore1);
+        int a =1;
+        btn_viewmore.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v){
+                int position = (int)btn_viewmore.getTag();
+                clickedItemPosition = position;
+                context.startActivity(new Intent(context, ViewMoreActivity.class));
+            }
+        });
+
+
         return v;
     }
 
