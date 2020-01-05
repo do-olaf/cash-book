@@ -16,6 +16,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,8 +60,8 @@ public class MyCursorAdapter extends CursorAdapter {
 
         //DB에 있는 데이터를 cursor를 움직이며 받아오기
         String date = cursor.getString( cursor.getColumnIndex( DATE ) );
-        String checkinout = cursor.getString( cursor.getColumnIndex( CHECKINOUT ) );
-        String money = cursor.getString( cursor.getColumnIndex( MONEY ) );
+        String checkinout = cursor.getString( cursor.getColumnIndex( CHECKINOUT ) ).equals("0") ? "수입" : "지출";
+        String money = new DecimalFormat("#,##0").format(Integer.parseInt(cursor.getString( cursor.getColumnIndex( MONEY ) )));
         String payment = cursor.getString( cursor.getColumnIndex( PAYMENT ) );
         String category = cursor.getString( cursor.getColumnIndex( CATEGORY ) );
 //        Log.d("스트링 확인", date + ", " + checkinout); //: 아마 필요 없는 코드. 다시 확인해보고 지울게요
