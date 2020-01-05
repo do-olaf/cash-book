@@ -29,9 +29,10 @@ public class MainActivity extends AppCompatActivity  {
     SQLiteDatabase sqLiteDatabase = null;
     DBOpenHelper dbOpenHelper = null;
     Button btn_startDate, btn_endDate;
-    TextView textView;
     ListView listView;
     MyCursorAdapter myAdapter;
+    CalendarPiker calpick_st = null;
+    CalendarPiker calpick_end = null;
 
     //하나의 onActivityResult()에서 여러 개의 startActivityForResult()를 구분하기 위한 상수
     private int REQUEST_CODE = 1;
@@ -45,22 +46,17 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listView = (ListView) findViewById(R.id.listView);
-
-        //DB 불러오기
-        loadDB();
-
         /**
          * 날짜, 버튼 셋팅
          */
         btn_startDate = (Button)(findViewById(R.id.btn_startDate));
         btn_endDate = (Button)(findViewById(R.id.btn_endDate));
-        CalendarPiker calpik_st = new CalendarPiker(this, btn_startDate ,14);
-        CalendarPiker calpik_end = new CalendarPiker(this,btn_endDate,0);
-        //시작 & 끝 선택 버튼 텍스트 셋팅
-        calpik_st.updateDateBtnText(calpik_st.setyear, calpik_st.setmonth, calpik_st.setday);
-        calpik_end.updateDateBtnText(calpik_end.setyear,calpik_end.setmonth,calpik_end.setday);
+        calpick_st = new CalendarPiker(this, btn_startDate ,14);
+        calpick_end = new CalendarPiker(this,btn_endDate,0);
 
+        // DB 불러와서 리스트 셋팅
+        listView = (ListView) findViewById(R.id.listView);
+        loadDB( (String) btn_startDate.getText(), (String) btn_endDate.getText() );
 
         //create 버튼 리스너 셋팅
         Button btn_create = (Button)findViewById(R.id.btn_create);
@@ -81,16 +77,37 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 deleteDB();
-                loadDB();
+                calpick_st.updateDateBtnText();
+                calpick_end.updateDateBtnText();
+                loadDB( (String) btn_startDate.getText(), (String) btn_endDate.getText() );
+            }
+        });
+
+        // search 버튼 리스너 셋팅
+        Button btn_search = (Button)findViewById(R.id.btn_search);
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if( Integer.parseInt((String)btn_startDate.getText()) > Integer.parseInt((String)btn_endDate.getText()) ){
+                    Toast.makeText(getApplicationContext(),"잘못된 기간 설정입니다",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                calpick_st.setPreDate();
+                calpick_end.setPreDate();
+                loadDB( (String) btn_startDate.getText(), (String) btn_endDate.getText() );
             }
         });
     }//onCreate()
 
     //DB 불러오는 메서드
-    private void loadDB(){
+    private void loadDB(String startDate, String endDate){
         dbOpenHelper = new DBOpenHelper(this);
         sqLiteDatabase = dbOpenHelper.getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(DBContract.table01._SELECT, null);
+
+        String sql_select = DBContract.table01._SELECT + startDate + " and " + endDate;
+        Log.d("select문", sql_select);
+        Cursor cursor = sqLiteDatabase.rawQuery(sql_select, null);
+
         //MyCursorAdapter에 지정한 DB불러오기 양식을 lstView에 구현
         myAdapter = new MyCursorAdapter(this, cursor);
         listView.setAdapter(myAdapter);
@@ -125,7 +142,6 @@ public class MainActivity extends AppCompatActivity  {
             String sql_delete = DBContract.table01._DELETE +_id;
             sqLiteDatabase.execSQL(sql_delete);
         }
-
     }
 
     //createActivity에서 저장된 결과 돌려주는 메서드
@@ -141,7 +157,9 @@ public class MainActivity extends AppCompatActivity  {
                             , data.getStringExtra("category")
                             , data.getStringExtra("memo")
                     );
-                    loadDB();
+                    calpick_st.updateDateBtnText();
+                    calpick_end.updateDateBtnText();
+                    loadDB((String) btn_startDate.getText(), (String) btn_endDate.getText());
             }
         }
     }

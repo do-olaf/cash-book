@@ -37,8 +37,10 @@ public final class DBContract {
                         + DATE + ", " + CHECKINOUT + ", " + MONEY + ", "
                         + PAYMENT + ", " + CATEGORY + ", " + MEMO + ") VALUES ";
         public static final String _SELECT =
-                "select * from " + _TABLENAME;
+                "select * from " + _TABLENAME + " where " + DATE + " between ";
         public static final String _DELETE =
                 "delete from " + _TABLENAME + " where " + _ID + "=";
+        public static final String _SELECTALL =
+                "select * from " + _TABLENAME;
     }
 }

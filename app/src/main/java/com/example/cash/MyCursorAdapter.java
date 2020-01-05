@@ -1,5 +1,6 @@
 package com.example.cash;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -95,7 +96,7 @@ public class MyCursorAdapter extends CursorAdapter {
     @Override
     public View newView(final Context context, Cursor cursor, ViewGroup parent) {
         //list_item에 만든 레이아웃을 확장하여 activity_main에 있는 listView에 넣는 개념
-        LayoutInflater inflater = LayoutInflater.from( context );
+        final LayoutInflater inflater = LayoutInflater.from( context );
         View v = inflater.inflate( R.layout.list_item, parent, false );
 
         // 체크박스 리스너 셋팅
@@ -123,12 +124,22 @@ public class MyCursorAdapter extends CursorAdapter {
         /*View More 버튼 리스너 세팅*/
 
         final Button btn_viewmore = (Button) v.findViewById(R.id.btn_viewmore1);
-        int a =1;
         btn_viewmore.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
+
                 int position = (int)btn_viewmore.getTag();
                 clickedItemPosition = position;
-                context.startActivity(new Intent(context, ViewMoreActivity.class));
+
+                Button stbtn = (Button) ((Activity) context).findViewById(R.id.btn_startDate);
+                String startDate = (String) stbtn.getText();
+                Button endbtn = (Button) ((Activity) context).findViewById(R.id.btn_endDate);
+                String endDate = (String) endbtn.getText();
+
+                Intent intent = new Intent(context, ViewMoreActivity.class);
+                intent.putExtra("startDate", startDate);
+                intent.putExtra("endDate", endDate);
+
+                context.startActivity(intent);
             }
         });
 

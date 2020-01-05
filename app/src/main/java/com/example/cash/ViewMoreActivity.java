@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -46,10 +47,18 @@ public class ViewMoreActivity  extends AppCompatActivity {
     String category;
     String memo;
 
+    // intent 로 가져온 날짜 데이터
+    String startDate = "";
+    String endDate = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewmore);
+
+        Intent intent = getIntent();
+        startDate = intent.getStringExtra("startDate");
+        endDate = intent.getStringExtra("endDate");
 
         btn_dataSelect = (Button)findViewById(R.id.btn_dateSelect);
         radioGroup = (RadioGroup)findViewById(R.id.radioBtn);
@@ -153,8 +162,12 @@ public class ViewMoreActivity  extends AppCompatActivity {
     private void loadDB(){
         dbOpenHelper = new DBOpenHelper(this);
         sqLiteDatabase = dbOpenHelper.getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(DBContract.table01._SELECT, null);
+
+        String sql_select = DBContract.table01._SELECT + startDate + " and " + endDate;
+        Log.d("select문", sql_select);
+        Cursor cursor = sqLiteDatabase.rawQuery(sql_select, null);
         cursor.moveToPosition(clickedItemPosition);
+
         date = cursor.getString(cursor.getColumnIndex( DATE ));
         checkinout = cursor.getString(cursor.getColumnIndex( CHECKINOUT ));
         money = cursor.getString(cursor.getColumnIndex(MONEY));
