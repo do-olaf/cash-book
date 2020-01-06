@@ -28,6 +28,8 @@ public class ViewMoreActivity  extends AppCompatActivity {
     SQLiteDatabase sqLiteDatabase = null;
     DBOpenHelper dbOpenHelper = null;
     MyCursorAdapter myAdapter;
+    ArrayAdapter<CharSequence> adapterPayment;
+    ArrayAdapter<CharSequence> adapterCategory;
 
     Button btn_edit, btn_cancel;
     Button btn_dataSelect;
@@ -80,14 +82,14 @@ public class ViewMoreActivity  extends AppCompatActivity {
          * 스피터 셋팅
          */
         //payment 스피너셋팅
-        ArrayAdapter<CharSequence> adapterPayment = ArrayAdapter.createFromResource(this, R.array.payment, android.R.layout.simple_spinner_item);
+        adapterPayment = ArrayAdapter.createFromResource(this, R.array.payment, android.R.layout.simple_spinner_item);
         adapterPayment.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPayment = (Spinner)findViewById(R.id.spinner_payment);
         spinnerPayment.setPrompt(payment);
         spinnerPayment.setAdapter(adapterPayment);
 
         //category 스피너셋팅
-        ArrayAdapter<CharSequence> adapterCategory = ArrayAdapter.createFromResource(this, R.array.category, android.R.layout.simple_spinner_item);
+        adapterCategory = ArrayAdapter.createFromResource(this, R.array.category, android.R.layout.simple_spinner_item);
         adapterCategory.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory = (Spinner)findViewById(R.id.spinner_category);
         spinnerCategory.setPrompt(category);
@@ -113,8 +115,6 @@ public class ViewMoreActivity  extends AppCompatActivity {
 
                     //HashMap처럼 key, value 설정
                     //이후 data.get~Extra("name") 으로 value값 불러올 수 있음
-//                    String[] date_arr = btn_dataSelect.getText().toString().split("-");
-//                    String DBdate = Arrays.toString(date_arr);
                     String DBdate = (String) btn_dataSelect.getText();
                     intent.putExtra("date", DBdate);
 
@@ -188,5 +188,7 @@ public class ViewMoreActivity  extends AppCompatActivity {
         btn_dataSelect.setText(date);
         et_money.setText(money);
         et_memo.setText(memo);
+        spinnerCategory.setSelection(adapterCategory.getPosition(category));
+        spinnerPayment.setSelection(adapterPayment.getPosition(payment));
     }
 }
