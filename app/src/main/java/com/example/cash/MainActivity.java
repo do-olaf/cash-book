@@ -35,7 +35,8 @@ public class MainActivity extends AppCompatActivity  {
     CalendarPiker calpick_end = null;
 
     //하나의 onActivityResult()에서 여러 개의 startActivityForResult()를 구분하기 위한 상수
-    private int REQUEST_CODE = 1;
+    private int REQUEST_CODE_CREATE = 1;
+    private int REQUEST_CODE_UPDATE = 2;
 
     /**
      * onCreate(): 액티비티가 생성될 때 호출되며 사용자 인터페이스 초기화에 사용됨.
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity  {
                 Intent intent = new Intent(MainActivity.this, CreateActivity.class);
 
                 //호출한 activity로부터 결과를 돌려받으려면 startActivityForResult()
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivityForResult(intent, REQUEST_CODE_CREATE);
             }
         });
 
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity  {
         dbOpenHelper = new DBOpenHelper(this);
         sqLiteDatabase = dbOpenHelper.getWritableDatabase();
 
-        String sql_select = DBContract.table01._SELECT + startDate + " and " + endDate;
+        String sql_select = DBContract.table01._SELECT + startDate + " and " + endDate + " order by date asc, _id asc";
         Log.d("select문", sql_select);
         Cursor cursor = sqLiteDatabase.rawQuery(sql_select, null);
 
@@ -140,14 +141,35 @@ public class MainActivity extends AppCompatActivity  {
         for(int i =0 ;i<selectedItemsPositions.size();i++) {
             int _id = selectedItemsPositions.get(i);
             String sql_delete = DBContract.table01._DELETE +_id;
+            Log.d("delete query String", sql_delete);
             sqLiteDatabase.execSQL(sql_delete);
         }
+    }
+
+    // DB 데이터 수정하는 메서드
+    private void updateDB(String date, String checkinout, String money
+            , String payment, String category, String memo){
+        dbOpenHelper = new DBOpenHelper(this);
+        sqLiteDatabase = dbOpenHelper.getWritableDatabase();
+
+        String sql_update = DBContract.table01._UPDATE +
+                "date='" + date + "', " +
+                "checkinout=" + checkinout + ", " +
+                "money=" + Integer.parseInt(money) + ", " +
+                "payment='" + payment + "', " +
+                "category='" + category + "', " +
+                "memo='" + memo +
+                "' where _ID=" + clickedItemPosition;
+
+        Log.d("update query String", sql_update);
+
+        sqLiteDatabase.execSQL(sql_update);
     }
 
     //createActivity에서 저장된 결과 돌려주는 메서드
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == REQUEST_CODE ){
+        if(requestCode == REQUEST_CODE_CREATE ){
             if(resultCode == RESULT_OK){
                     insertDB(
                             data.getStringExtra("date")
@@ -160,6 +182,22 @@ public class MainActivity extends AppCompatActivity  {
                     calpick_st.updateDateBtnText();
                     calpick_end.updateDateBtnText();
                     loadDB((String) btn_startDate.getText(), (String) btn_endDate.getText());
+            }
+        }
+
+        if(requestCode == REQUEST_CODE_UPDATE ){
+            if(resultCode == RESULT_OK){
+                updateDB(
+                        data.getStringExtra("date")
+                        , data.getStringExtra("checkinout")
+                        , data.getStringExtra("money")
+                        , data.getStringExtra("payment")
+                        , data.getStringExtra("category")
+                        , data.getStringExtra("memo")
+                );
+                calpick_st.updateDateBtnText();
+                calpick_end.updateDateBtnText();
+                loadDB((String) btn_startDate.getText(), (String) btn_endDate.getText());
             }
         }
     }

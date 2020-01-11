@@ -34,6 +34,7 @@ public class MyCursorAdapter extends CursorAdapter {
     static List<Integer> selectedItemsPositions;        //checkbox list
     static int clickedItemPosition;             //btn_viewmore 클릭된 item의 position
     CheckBox checkBox;
+    Button btn_viewmore;
 
     @SuppressWarnings("deprecation")
     public MyCursorAdapter(Context context, Cursor c) {
@@ -74,17 +75,16 @@ public class MyCursorAdapter extends CursorAdapter {
         tvCategory.setText(category);
 
         // 체크박스 바인딩
-        CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox1);
+        checkBox = (CheckBox) view.findViewById(R.id.checkBox1);
         checkBox.setTag(cursor.getInt(0)); // id 값으로 tag 셋팅
-        if (selectedItemsPositions.contains(cursor.getPosition()))
+        if (selectedItemsPositions.contains(cursor.getInt(0)))
             checkBox.setChecked(true);
         else
             checkBox.setChecked(false);
 
-
-        Button btn_viewmore = (Button) view.findViewById(R.id.btn_viewmore1);
-        btn_viewmore.setTag(cursor.getPosition());  // position값으로 tag셋팅
-
+        // 더보기 버튼 바인딩
+        btn_viewmore = (Button) view.findViewById(R.id.btn_viewmore1);
+        btn_viewmore.setTag(cursor.getInt(0));  // id 값으로 tag셋팅
     }
 
     /**
@@ -123,27 +123,16 @@ public class MyCursorAdapter extends CursorAdapter {
         });
 
         /*View More 버튼 리스너 세팅*/
-
-        final Button btn_viewmore = (Button) v.findViewById(R.id.btn_viewmore1);
+        btn_viewmore = (Button) v.findViewById(R.id.btn_viewmore1);
         btn_viewmore.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
-
-                int position = (int)btn_viewmore.getTag();
+                int position = (int) v.getTag();
                 clickedItemPosition = position;
 
-                Button stbtn = (Button) ((Activity) context).findViewById(R.id.btn_startDate);
-                String startDate = (String) stbtn.getText();
-                Button endbtn = (Button) ((Activity) context).findViewById(R.id.btn_endDate);
-                String endDate = (String) endbtn.getText();
-
                 Intent intent = new Intent(context, ViewMoreActivity.class);
-                intent.putExtra("startDate", startDate);
-                intent.putExtra("endDate", endDate);
-
-                context.startActivity(intent);
+                ((Activity) context).startActivityForResult(intent, 2);
             }
         });
-
 
         return v;
     }

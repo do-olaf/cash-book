@@ -42,5 +42,7 @@ public final class DBContract {
                 "delete from " + _TABLENAME + " where " + _ID + "=";
         public static final String _SELECTALL =
                 "select * from " + _TABLENAME;
+        public static final String _UPDATE =
+                "update " + _TABLENAME + " set ";
     }
 }

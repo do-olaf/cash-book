@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -163,26 +164,27 @@ public class ViewMoreActivity  extends AppCompatActivity {
         dbOpenHelper = new DBOpenHelper(this);
         sqLiteDatabase = dbOpenHelper.getWritableDatabase();
 
-        String sql_select = DBContract.table01._SELECT + startDate + " and " + endDate;
+        String sql_select = DBContract.table01._SELECTALL + " where _id=" + clickedItemPosition;
         Log.d("select문", sql_select);
         Cursor cursor = sqLiteDatabase.rawQuery(sql_select, null);
-        cursor.moveToPosition(clickedItemPosition);
 
-        date = cursor.getString(cursor.getColumnIndex( DATE ));
-        checkinout = cursor.getString(cursor.getColumnIndex( CHECKINOUT ));
-        money = cursor.getString(cursor.getColumnIndex(MONEY));
-        payment = cursor.getString(cursor.getColumnIndex(PAYMENT));
-        category = cursor.getString(cursor.getColumnIndex(CATEGORY));
-        memo = cursor.getString(cursor.getColumnIndex(MEMO));
+        while( cursor.moveToNext() ) {
+            date = cursor.getString(cursor.getColumnIndex( DATE ));
+            checkinout = cursor.getString(cursor.getColumnIndex( CHECKINOUT ));
+            money = cursor.getString(cursor.getColumnIndex(MONEY));
+            payment = cursor.getString(cursor.getColumnIndex(PAYMENT));
+            category = cursor.getString(cursor.getColumnIndex(CATEGORY));
+            memo = cursor.getString(cursor.getColumnIndex(MEMO));
+        }
+
         cursor.close();
-
     }
 
     //불러온 정보를 화면에 출력
     private void setData(){
-        if(checkinout=="0"){ //수입: 0, 지출: 1
+        if(checkinout.equals("0")){ //수입: 0, 지출: 1
             radioBtn_income.setChecked(true);
-        }else{ //현재 else만 실행되는 상황
+        }else{ //현재 else만 실행되는 상황 -> string 이라 .equals() 로 비교해야돼요~
             radioBtn_outcome.setChecked(true);
         }
         btn_dataSelect.setText(date);
