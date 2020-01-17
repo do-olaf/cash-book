@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -96,6 +97,15 @@ public class MainActivity extends AppCompatActivity  {
                 calpick_st.setPreDate();
                 calpick_end.setPreDate();
                 loadDB( (String) btn_startDate.getText(), (String) btn_endDate.getText() );
+            }
+        });
+
+        //전체선택 check box 리스너
+        final CheckBox cb_checkwhole = (CheckBox)findViewById(R.id.cb_checkwhole);
+        cb_checkwhole.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+               myAdapter.setAllChecked(cb_checkwhole.isChecked());
             }
         });
     }//onCreate()

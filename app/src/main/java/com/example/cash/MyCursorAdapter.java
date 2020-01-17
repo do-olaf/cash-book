@@ -31,6 +31,7 @@ import static com.example.cash.DBContract.table01.PAYMENT;
 public class MyCursorAdapter extends CursorAdapter {
     // 체크박스가 체크된 item의 position값 저장할 List
 
+    Cursor cursor;
     static List<Integer> selectedItemsPositions;        //checkbox list
     static int clickedItemPosition;             //btn_viewmore 클릭된 item의 position
     CheckBox checkBox;
@@ -52,6 +53,7 @@ public class MyCursorAdapter extends CursorAdapter {
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        this.cursor=cursor;
         //list_item에 있는 컴포넌트들 객체로 받아오기
         TextView tvDate = (TextView) view.findViewById( R.id.date );
         TextView tvCheck = (TextView) view.findViewById( R.id.checkinout );
@@ -74,6 +76,7 @@ public class MyCursorAdapter extends CursorAdapter {
         tvPayment.setText(payment);
         tvCategory.setText(category);
 
+        //setCheckBoxBinding();
         // 체크박스 바인딩
         checkBox = (CheckBox) view.findViewById(R.id.checkBox1);
         checkBox.setTag(cursor.getInt(0)); // id 값으로 tag 셋팅
@@ -135,6 +138,22 @@ public class MyCursorAdapter extends CursorAdapter {
         });
 
         return v;
+    }
+    public void setAllChecked(boolean ischeked){
+        if(ischeked==true){ //체크할 때
+            if(cursor!=null) { //DB에 데이터가 없으면 오류가 떠서 이렇게 해줬습니다.
+                cursor.moveToFirst();
+                do {
+                    selectedItemsPositions.add(cursor.getInt(0));
+                } while (cursor.moveToNext());
+                this.notifyDataSetChanged();
+            }
+        }else{ //체크 해제할 때
+            if(cursor!=null) {
+                selectedItemsPositions.clear();
+                this.notifyDataSetChanged();
+            }
+        }
     }
 
 
